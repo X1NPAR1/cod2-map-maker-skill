@@ -18,7 +18,9 @@
 | Vehicle riders missing or sliding | spawners far from vehicle, or AI budget full | ±110u beside the vehicle; AI < 26 |
 | `in solid` spawners | slope or furniture | move them and re-verify |
 | Plane invisible | outside the skybox | spawn inside |
-| Hint shows `[[{+activate}]]` | key binding in normal .str | use _platform.str |
+| Hint shows raw key text | wrong format or normal .str | `[&&1]` in _platform.str (engine fills the use key) |
+| Vehicle comes half empty | stock spawn_group uses doSpawn(), which silently fails (sight/space) | stalingradspawn riders yourself, put them in level.script_vehiclerideai[group], empty level.script_vehicleridespawners[group] |
+| AI walk through a closed scripted door | path links computed with door open | door disconnectpaths() when closed, connectpaths() when opened |
 | Door has the wrong texture | `box()` top-only material | per-face materials |
 | Player walks through an opened door | `notsolid()` after opening | keep it solid |
 | Posts or planks float | z taken from a constant | z from the surface below |

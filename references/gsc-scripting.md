@@ -104,7 +104,7 @@ t sethintstring(&"MAP_PLATFORM_BREAK_DOOR");   // the string lives in <map>_plat
 In the platform file:
 ```
 REFERENCE           BREAK_DOOR
-LANG_ENGLISH        "Press [[{+activate}]] to break the door"
+LANG_ENGLISH        "Press [&&1] to break the door"
 ```
 
 ## Syntax and encoding traps

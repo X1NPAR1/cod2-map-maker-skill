@@ -45,3 +45,15 @@ levelBriefing,loadscreen_tankhunt
 victoryBackdrop,victory_russian
 defeatBackdrop,defeat_russian
 ```
+
+## Look at every texture before you use it
+Material names lie. `stalingradwinter_door_wood01`, `stalingrad_wd_door` and `dawnville2_wood_door01-03`
+all point to `case256x512brown*` images — **placeholder** crate-coloured textures, not doors. A material
+whose image name starts with `case` is a placeholder. Use `scripts/iwi_preview.py` to export the colour
+map to PNG and view it. Verified real single-leaf doors: `mtl_caen_door_01` (256x512 brown planks,
+ring handle), `mtl_hill400_door_01`, `v_door01`, `mtl_wood_door1`, `mtl_door_wood` (double panelled).
+Fit a door texture exactly to the leaf: scale = leaf size / image size, shift = -min.
+
+IWI v5 header: `IWi`, version 5, format (0x0B DXT1, 0x0C DXT3, 0x0D DXT5, 1 RGBA, 2 RGB), usage,
+width u16, height u16, depth u16, 4 x int32 mip offsets (28 bytes). Mips are stored smallest first,
+so the full-size image is the LAST w*h block.

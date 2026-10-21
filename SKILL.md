@@ -46,7 +46,7 @@ main/maps/<map>.csv                  # loadscreen + victory/defeat backdrops
 main/sun/<map>.sun                   # sun / fog / lighting tweaks
 main/soundaliases/<map>.csv          # every alias the level uses, loadspec = <map>
 main/localizedstrings/<map>.str      # objective/intro text  (&"MAP_KEY")
-main/localizedstrings/<map>_platform.str  # strings that contain key bindings [[{+activate}]]
+main/localizedstrings/<map>_platform.str  # strings that contain key bindings [&&1]
 ```
 
 Missing `.csv`, `.sun`, `.str` or alias file does not always error — it silently produces a
@@ -117,9 +117,17 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
 - `abs`, `random`, `flag*` already exist in `_utility`; redefining = compile error.
 - `dodamage(amount, origin)` takes 2 args in SP.
 - `anim.noWeaponToss = true` after AI init stops Germans swapping to dropped Lugers.
-- Key bindings in hints (`[[{+activate}]]`) resolve **only** in `<map>_platform.str` strings
+- Key bindings in hints (`[&&1]`) resolve **only** in `<map>_platform.str` strings
   (`&"MAP_PLATFORM_KEY"`). In `<map>.str` they print raw.
 - Keep **total live AI under ~26**; above that vehicles spawn without riders. Throttle waves.
+- Stock `spawn_group` spawns riders with `doSpawn()`, which silently fails (player sight, blocked
+  space) → half-empty trucks. Spawn riders yourself with `stalingradspawn()`, set
+  `level.script_vehiclerideai[group] = ai` and `level.script_vehicleridespawners[group] = []`
+  before `scripted_spawn(group)`; stock code then seats them.
+- Hint key text in platform strings uses the stock form `[&&1]` (engine fills the use key).
+
+- **Look before you texture:** export the material's image (`scripts/iwi_preview.py`) and view it.
+  Many names (`*_door_wood01`) point to `case*` placeholder images.
 
 ### Sound
 - Stock aliases are restricted with a `loadspec` column to their own level. Using
@@ -148,9 +156,11 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
 - **Invulnerable friendly vehicle:** loop `self.health = 100000; self waittill("damage");`.
 - **Mortar crew:** stock `_mortarteam` (trainyard pattern) with `self.mortarEnt`, `self.mortar`,
   `self.mortar_targets`, `level.mortar` effect; crew leaves the tube only when hit.
-- **Door breach:** brushmodel door, F-use trigger (off until phase), `rotateyaw(95,0.55,0.05,0.3)`,
-  stays solid, dust/splinter FX, `eldaba_doorbreak` sound.
-- **Ambush door:** player reaches top step → spawn 2 behind door → wait 1 → door bursts.
+- **Door breach:** brushmodel door (real door texture fitted to the leaf), `disconnectpaths()` while
+  closed, F-use trigger (off until phase), on open `connectpaths()` then `rotateyaw(165,0.9,0.1,0.4)`
+  (fully open, not 90), stays solid, only the `eldaba_doorbreak` sound (players read FX as gunfire).
+- **Ambush door:** player reaches top step → spawn 2 behind door, OUTSIDE the leaf's swing radius,
+  `ignoreall/ignoreme` until the leaf is fully open → wait 1 → door bursts → release them.
 - **Weapon swap station:** script_model on a crate + trigger_use; swap current weapon,
   dropped weapon shown with the non-`_obj` model (the `_obj` variant glows).
 - **Final circle:** squad forms a ring with one empty slot; speech only when all arrived and
