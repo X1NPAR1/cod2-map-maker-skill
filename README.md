@@ -12,9 +12,14 @@ Companion agent: **https://github.com/X1NPAR1/cod2-map-maker-agent**
 | File | Topic |
 |---|---|
 | `SKILL.md` | Workflow, hard rules, proven patterns |
+| `references/planning-interview.md` | Plan-mode interview and plan template |
+| `references/visual-qa.md` | Screenshot tours and visual checklist |
+| `scripts/iwi_preview.py` | Export a material's texture to PNG |
+| `scripts/screenshot_tour.ps1` | Drive an in-game screenshot tour |
 | `references/install-layout.md` | Tools, folders, iwd contents |
 | `references/map-format.md` | .map format, generator design, materials, entities |
 | `references/compile-pipeline.md` | cod2map, cod2rad, connectpaths, gates, launching |
+| `references/terrain-borders-hidden-roads.md` | Sky box, outer ring, hidden spawn roads |
 | `references/ai-paths.md` | Lump 38 decoding, reachability audit, stairs/clip rules |
 | `references/gsc-scripting.md` | Level skeleton, helpers, spawning, friendlies, objectives |
 | `references/vehicles-mortars.md` | Vehicles, riders, godmode, mortar crews, flybys |

@@ -21,6 +21,8 @@
 | Hint shows raw key text | wrong format or normal .str | `[&&1]` in _platform.str (engine fills the use key) |
 | Vehicle comes half empty | stock spawn_group uses doSpawn(), which silently fails (sight/space) | stalingradspawn riders yourself, put them in level.script_vehiclerideai[group], empty level.script_vehicleridespawners[group] |
 | AI walk through a closed scripted door | path links computed with door open | door disconnectpaths() when closed, connectpaths() when opened |
+| Fatal "script_brushmodel must have DYNAMICPATH set to connect paths" | brushmodel without spawnflags 1 | `spawnflags 1` on the door |
+| Door texture shows a seam / handle on the wrong edge | wrong fit offset sign | horizontal +min, vertical -min |
 | Door has the wrong texture | `box()` top-only material | per-face materials |
 | Player walks through an opened door | `notsolid()` after opening | keep it solid |
 | Posts or planks float | z taken from a constant | z from the surface below |
