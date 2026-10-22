@@ -51,3 +51,11 @@
 | "is not a friendly chain node" fatal after regenerating nodes | chain start node changed | drop `setfriendlychain` when the squad is fully scripted |
 | Vehicle riders run back to where the truck spawned | stock unload overrides the goal you set | re-issue goals every few seconds for ~30 s after unload |
 | Spawns seen by the player | - | before `stalingradspawn`: skip points in the view cone (dot>0.35) that pass `sighttracepassed` from the eye |
+| Brushmodel textures shifted / doors and boards look skewed after moving it in | world-aligned textures are computed where the brushmodel was compiled; an arbitrary offset (9000/2000) breaks the fit | compile-time offset must be a multiple of every texture repeat used (e.g. X 9216 = 144*64, divisible by 48/64/256/512); avoid Z offsets on fitted textures |
+| Attackers stop and stand far from the target | random goal inside the camp landed inside a closed building (no path) | give an always-reachable goal (just inside the gate), then hunt the nearest defender that is on the ground |
+| Attackers stop to fight instead of pushing | default pathenemyfightdist | while running: `pathenemyfightdist 0`, `pathenemylookahead 0`, `ignoresuppression true`; on `damage` fight for ~4 s, then resume |
+| Player/AI walk through furniture | misc_model / script_model props have no collision | add a `clip` box per prop (radius/height table per model) |
+| A squad member stays at the truck forever | unexplained path/unload glitch | watchdog: no movement for 9 s and far from player -> teleport behind the player when neither spot is visible |
+| AI needed on a floor with no path nodes (upper floor, MG nest) | no nodes there | walk them into the building, then `teleport` to a window `script_origin` when unseen; keep turret users in a `useturret` loop |
+| Building "vanishes" in the explosion | brushmodel deleted | sink it instead: `movez(-height)` + small `rotateroll`, keep it as debris; show the rubble brushmodel |
+| Vehicles start visibly late after the fade | ~2-3 s between `gopath` and visible motion | issue the start that much earlier than the moment the user wants |
