@@ -42,3 +42,27 @@ print(n, 'nodes', n - len(seen), 'unreachable')
 - **Node spacing:** 96–192 units for cover and path nodes, denser inside buildings. A doorway needs a node on each side.
 - **Window cover:** use `node_cover_crouch_window` or stand nodes 20–30 units from the wall, facing out.
 - **Water:** AI avoid deep water. Give bridges their own nodes, and route intermediate goals across the bridges.
+
+## Lessons from 'burya' (measured with the lump-38 audit)
+- **Terrain MESH -> brush floor step = ONE-WAY door.** Measured on a test map (same 52x76-door
+  room each time): brush ground + 16u floor -> two-way; MESH ground + 16u floor -> links out
+  only ("can leave, cannot enter"); any ground + 4u floor -> one-way. Script_models, triggers,
+  lights, detail brushes, window frames, interior walls and a brushmodel ceiling made no
+  difference. Fix: give every enterable building a BRUSH apron/porch (or a brush ramp) between
+  the terrain mesh and the door, and use a 16u floor. When a cause is unclear, build a tiny
+  test map with one variable per room (`scripts/path_experiment_map.py`) -- it compiles in
+  seconds and ends the guessing.
+- Brushmodels placed over a building at +2000 were suspected first and were NOT the cause, but
+  keeping destroyable brushmodels away from the playable area at compile time (shift them
+  horizontally, move them into place at runtime) is still the safest pattern.
+- **One-way into an area = only a drop leads there.** Print one-way edges from the reachable
+  set to find it (e.g. the only way into a camp yard was jumping off a tower stair ramp).
+- **Props make walls.** Two sandbags just inside a gate plus two watchtower stairs sealed the
+  whole camp. A static truck, barrels or a sandbag in a 100-300u corridor between buildings
+  can isolate a region. Keep corridors >= 150u clear.
+- **The 150u grid misses narrow corridors.** Add a dense (75u) grid inside built-up areas.
+- **Stairs must not run toward other buildings.** Run tower stairs along the fence; leave the
+  space under a raised platform walkable (only legs as obstacles).
+- **Bridge ends:** set road z near the river to the deck height, or a 30-50u step splits the map.
+- **Visible stair steps above the caulk ramp** block the ramp; set each step top = ramp height at
+  its back edge - 1 so steps stay under the ramp surface.
