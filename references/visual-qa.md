@@ -47,3 +47,14 @@ The only way to catch these is to **look**. Do it yourself before asking the use
 ## Reporting to the user
 - Send the key images (closed/open states, before/after) with a short caption. Use the file-send tool so they reach the user's phone.
 - Only after the images look right, launch the game for the user's playtest. Ask them to play it through and report anything wrong. Their list is the next iteration.
+
+## Rule: shoot every build until the user's first playtest
+From the first compile until the user plays the map, run the full tour on every build and send the sheets. Cover:
+- bird's-eye of the whole map and each zone;
+- every road and route from both ends;
+- each building outside and each enterable interior;
+- the start in four directions;
+- spawn approaches;
+- all horizons.
+
+Dress the environment before calling a build ready: trees and oases along roads, shrubs, rocks, wrecks, props at every building, footpaths between zones. An empty plain reads as unfinished.
