@@ -59,3 +59,12 @@
 | AI needed on a floor with no path nodes (upper floor, MG nest) | no nodes there | walk them into the building, then `teleport` to a window `script_origin` when unseen; keep turret users in a `useturret` loop |
 | Building "vanishes" in the explosion | brushmodel deleted | sink it instead: `movez(-height)` + small `rotateroll`, keep it as debris; show the rubble brushmodel |
 | Vehicles start visibly late after the fade | ~2-3 s between `gopath` and visible motion | issue the start that much earlier than the moment the user wants |
+| Brushmodel compiled far away looks dark / unlit | it was compiled outside the skybox (no sun, no light grid) | compile it INSIDE the skybox at a lit, node-free spot (e.g. high above the outer ridge), shifted by multiples of 512 |
+| Brushmodel textures misaligned after moving it in | geometry was generated in place and then text-shifted, so fitted textures (doors, shutters) were computed for the wrong spot | generate the part directly at the compile location (fits computed there); textures travel with the brushmodel |
+| Brushmodel compiled in place cuts the building interior out of the path net | brushmodel volume over a room blocks connectpaths links | never compile a removable part in place over a room; use the in-skybox offset above |
+| A whole house interior becomes unreachable after adding props | a prop's clip box sits on the door's outside node | keep clip boxes >= 120u from every door; re-run the path audit after every prop pass |
+| `actor_*_mg42portable` fatal in `_spawner::mg42setup_gun` | that class needs a target node for its MG | don't use portable-MG classes without a set-up node |
+| Halftrack MG silent after the gunner gets out | stock turret is manual_ai | after unload: `mgturret[0] setturretteam("axis"); setmode("auto_nonai")` |
+| Tank fights in script order | stock tanks auto-shoot and kill the wrong target first | keep scripted victims invulnerable (`waittill damage` health reset loop) until their turn; fire with `setturrettargetent` -> `turret_on_target` (timeout) -> `notify turret_fire`; kill with `dodamage` + `notify death` |
+| Enemies spawn while the truck is still far / squad never shoots from the truck | group spawned at arrival | spawn the defenders when the vehicle is ~3 path nodes (~720u) from its stop; the player can already aim from `playerLinkToDelta` |
+| Defenders always pile into one building | positions handed out in a fixed order | split window spots by building, alternate soldiers between buildings, shuffle each time |
