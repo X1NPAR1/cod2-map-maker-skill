@@ -76,3 +76,9 @@
 | Scripted vehicles pass through rocks/trees | decor scattered without knowing vehicle routes | keep vehicle route polylines in the generator and exclude rocks/trees within ~350u of them |
 | Squad stands still all fight | one cover assignment, then idle | every 30-40 s move each soldier to another free cover/window 200-900u away inside the play area |
 | Fly-by strafe | - | script_model `vehicle_stuka_flying`: `moveto` dive, `playloopsound("stuka_guns")`, impact fx walking along the road, `moveto` climb out of the map, delete; `setspeed(+6, accel)` on the convoy at the first impact |
+| Funnel-shaped ramps in front of doors look fake | sloped `kama` ramps flaring outward | make the building floor brush only ~2u above the surrounding brush yard; no ramp needed and links stay two-way (brush -> brush) |
+| Mounted MG floats above a roof | turret origin set above the roof floor with nothing under the bipod | put `misc_turret` (mg42_bipod_stand) ON a parapet/sandbag top surface; gunner spot 40u behind |
+| Next wave starts the moment the player arrives | `waittill_aigroupcleared` returns before the late-spawned group exists | collect spawned AI into a list, set a "spawned" flag, then wait for flag + list empty |
+| Only part of a closed building must break (a corner) | world walls | route every box fully inside the corner rect into a list (kutu6 region hook), build the roof as an L so the corner slab is separate, compile that list in-skybox as a brushmodel; swap to a triangle-rubble corner + clip on hit |
+| Friendlies die too fast / leave cover | default health, big pathenemyfightdist | health 1250 for the squad, `pathenemyfightdist` ~64 at windows, move to another window of the SAME house on damage or every 30-40 s |
+| Final ring members don't face the centre | goal positions only | spawn a script_origin at the centre and `lookat` it in a short loop |
