@@ -23,6 +23,7 @@
 | AI walk through a closed scripted door | path links computed with door open | door disconnectpaths() when closed, connectpaths() when opened |
 | Fatal "script_brushmodel must have DYNAMICPATH set to connect paths" | brushmodel without spawnflags 1 | `spawnflags 1` on the door |
 | Door texture shows a seam / handle on the wrong edge | wrong fit offset sign | horizontal +min, vertical -min |
+| Mission flow freezes after an objective; squad stands still | `autoSaveByName()` called inline: stock `tryAutoSave` loops until `autoSaveCheck()` passes (no enemies near, health ok) and can wait forever | always `level thread autoSaveByName(...)`; never block the mission thread on saves, dialogue or music (give waits a timeout) |
 | Door has the wrong texture | `box()` top-only material | per-face materials |
 | Player walks through an opened door | `notsolid()` after opening | keep it solid |
 | Posts or planks float | z taken from a constant | z from the surface below |
@@ -38,3 +39,15 @@
 | Old behaviour after a fix | stale save loaded | start fresh with devmap |
 | BSP won't overwrite | game still running | kill CoD2SP_s before compiling |
 | Tool says "done" but nothing changed | silent failure | measure output (mtime, counts, grep) |
+| Dialogue line silent; console "issued a second playsound with notification string before the first finished" | two notify-playsounds on the same actor | play each line from its own `spawn("script_origin")` linked to the speaker, delete it after the notify/timeout |
+| Line plays nothing, no subtitle | stock alias points at `null.wav` (cut line) or has no subtitle | reject null.wav / empty subtitle in the alias tool; pick another stock line |
+| AI stop moving everywhere; console spams "Duplicate/overlap node errors" | new nodes (ladder/platform) closer than ~40u | keep every node >=40u apart; re-check the console after each compile |
+| Ladder | - | brush with material `ladder` (player climb clip) + visible rails/rungs; AI: `node_negotiation_begin` `animscript ladder_up` at the bottom facing the ladder -> `node_negotiation_end` on top, plus a top `ladder_down` begin -> bottom end |
+| Runtime error mid-sequence after `delete()` | loop reads fields of an entity deleted earlier in the same loop | copy noteworthy/origin into arrays first |
+| Building should collapse but walls block paths | whole house as brushmodel breaks the path net | split walls at z (e.g. +40): low band world, upper band + roof + window frames -> script_brushmodel compiled 9000u away, moved in at start; rubble brushmodel hidden, moved in on blast |
+| Tower should topple | - | whole tower one script_brushmodel with an `origin` brush at the base; `rotatepitch`/`rotateroll` slow then fast, `movegravity` debris models |
+| Braces/beams make nodes "in solid" | geometry under ~72u above a node | keep beams above head height |
+| Objective props visible too early | - | `hide()` the model and move its trigger 10000u down; restore when the objective starts |
+| "is not a friendly chain node" fatal after regenerating nodes | chain start node changed | drop `setfriendlychain` when the squad is fully scripted |
+| Vehicle riders run back to where the truck spawned | stock unload overrides the goal you set | re-issue goals every few seconds for ~30 s after unload |
+| Spawns seen by the player | - | before `stalingradspawn`: skip points in the view cone (dot>0.35) that pass `sighttracepassed` from the eye |
