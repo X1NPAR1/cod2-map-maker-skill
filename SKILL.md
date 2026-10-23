@@ -7,9 +7,11 @@ description: Build, script, compile and debug Call of Duty 2 (2005, IW engine) s
 
 This skill turns Claude into a working Call of Duty 2 single-player level designer and scripter.
 Everything here was **measured in a real CoD2 1.3 + Mod Tools install** while shipping several
-complete campaign maps (a village assault, a three-objective outpost assault with a 50-enemy
-defense wave, vehicles, mortar crews, door breaches, a scoped-rifle swap station, and a final
-cutscene that chains into the credits). Stock-script line references point at the files shipped
+complete campaign maps. Together they form a released five-mission campaign
+(https://github.com/X1NPAR1/cod2-maps): a village assault, a three-objective outpost assault with a
+50-enemy defense wave, a convoy ambush, a desert village siege, and a stealth/walled-town raid.
+Along the way they used vehicles, mortar crews, door breaches, a scoped-rifle swap station, Stuka
+flybys, staged building collapses, sticky-bomb tanks, a truck finale and credits chaining. Stock-script line references point at the files shipped
 inside `main/iw_07.iwd` (`maps/_utility.gsc`, `_spawner.gsc`, `_vehicle.gsc`, ...).
 
 > Golden rule: **the engine and tools lie by omission.** A compile that "succeeds" may have
@@ -83,7 +85,11 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
    - props and border edges.
    Read every image yourself, fix what is wrong, recompile and re-shoot until nothing visible is
    wrong. Send the key images to the user.
-8. **Optional automated runtime test** (test-mode cvars that play the mission and log via `setcvar`).
+8. **Mandatory mission flow test** (`references/testing.md`). Add a `kr_tur 2` auto-player that
+   plays the whole mission in god mode and logs phase changes plus a 15 s status line (AI counts,
+   hero and vehicle positions) through `setcvar`.
+   - Gate: it reaches the final line with 0 script runtime errors.
+   - One run of this test found five real blockers that a load test never shows.
 9. **Hand to the user** fullscreen, without developer mode, and *ask them to play and test it*.
    Their feedback list is the next iteration: fix every item surgically, re-run the gates and the
    relevant screenshot views, then hand back again.
@@ -186,6 +192,25 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
   dropped weapon shown with the non-`_obj` model (the `_obj` variant glows).
 - **Final circle:** squad forms a ring with one empty slot; speech only when all arrived and
   the player is within radius; 3s → 7s fade → `missionSuccess("credits")`.
+- **Stealth convoy:** the player is prone in a bush ring. If a vehicle is within 1500u and the
+  player is not prone or outside the ring, the player is detected.
+  - Tanks get `script_turret 0`, MGs `setmode("manual")` and riders `ignoreall`.
+  - Delete the riders (from your own list) before the end node, or they unload and attack.
+- **Squad moves:** every scripted move is `setgoalnode(nearest unused pathnode)`; a free point the
+  AI cannot path to freezes it silently.
+  - A "scene" brain mode keeps the combat brain off during cinematics.
+  - Phase-limited watchdogs bring frozen or lagging members back while unseen.
+- **Sticky-bomb tank** (krasnoye/tankhunt pattern): `weapon_stickybomb_obj` linked to
+  `tag_engine_left` blinks until planted; a fallback after N seconds makes two friendlies
+  immortal and has them plant it.
+- **Truck finale** (beltot pattern):
+  - The player climbs into the bed through a scripted mover, then `playerLinkToDelta` to `tag_player`.
+  - The hero plays `beltot_truckscene_checktruck_guy` on `tag_driver` while the truck plays
+    `beltot_truckscene_checktruck_truck`; he is then linked to the driver idle.
+  - Two immortal soldiers climb in with `germantruck_guyA/B_climbin` on `tag_climbnode`.
+  - Raise the player-only gate blocker, `gopath`, and fade 6 s later.
+- **Gate breach by tank:** a two-leaf brushmodel gate with bottom-edge origins; a tank shot makes
+  both leaves `rotatepitch(-90)` outward plus a small `movez` down, with dust and debris.
 
 ## 5. Communicating with the user
 
