@@ -26,3 +26,14 @@ test_log(msg) { setcvar("kr_log", msg); } // shows in console.log as "dvar set k
 - Launch fullscreen without developer mode.
 - Collect the user's list of problems and fix every item.
 - Re-measure every gate after the fixes.
+
+## Full mission flow test (kr_tur 2) -- mandatory before handing over
+- Add a test mode to the level script: when cvar `kr_tur` is `2`, run the normal mission plus an auto-player thread.
+  - The auto-player is god-mode (health loop). It stays prone during stealth, teleports to each objective, kills the targets with `dodamage`, and fires the use triggers with `notify("trigger", level.player)`.
+- Log with `setcvar("kr_log", msg)`. Every `dvar set kr_log ...` line lands in `console.log` (`logfile 2`); `println` does NOT.
+- Also log a status line every 15 s: phase, AI counts, remaining enemies, key vehicle position. This turns a silent hang into a diagnosis.
+- Start the game windowed with sound off (`snd_volume 0`, `mus_volume 0`), click once after `Load time` (the loadscreen waits for input), and watch the log with a Monitor.
+- Test-script traps:
+  - Never teleport the auto-player into a vehicle spawn valley; the vehicles crush it and the autosave reload loops.
+  - Fire a trigger only after the script has re-enabled it, or the notify is lost.
+- This run found five real bugs in one map: spawner field read after delete, turret delete, turret notsolid, visible-spawner stall, and a vehicle blocked by clip_player.
