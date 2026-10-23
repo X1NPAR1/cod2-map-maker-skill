@@ -100,3 +100,9 @@
 | One AI (Price) never leaves his spawn while the rest run | `setgoalpos` to a free point he has no path to: the AI silently stands still | send squads with `setgoalnode(nearest unused pathnode)`; add a phase-limited watchdog that moves a frozen AI next to a teammate while unseen |
 | Watchdog teleports the hero back to an old rally point | watchdog kept running after the phase changed | end every watchdog when its phase ends |
 | Road mesh looks broken on bends | 3-column road strip: inner-edge points cross at sharp corners and the triangles fold | Chaikin-smooth the polyline (3 passes) before building the strip |
+| Riders of a passing convoy suddenly attack | at the end node the stock code unloads the riders and they become normal AI | keep your own copy of the rider list at spawn; delete riders and vehicle ~900u BEFORE the end node |
+| Plant marker floats beside a gun/tank | spawn origin + constant z | ground markers: bulletTrace down to the floor; tank charges: `weapon_stickybomb(_obj)` linked to `tag_engine_left` (krasnoye/tankhunt pattern) |
+| Player cannot reach a plant trigger | a clip box around the prop, or a player-blocker next to the vehicle's stop | no clip boxes around props (use the model's own collision); stop vehicles well clear of blockers, put the use trigger on the reachable side |
+| Squad "doesn't go" after a briefing | `ekip_hucum` found no cover nodes near the target, so the mode never changed | send scripted moves with `setgoalnode` to nearest real nodes around the point; give the brain a "scene" mode that leaves them alone |
+| Cinematic vehicles vanish in view | forced delete after a timeout | delete only when unseen AND far from the player; extend the exit path |
+| Final truck cannot drive out | player-only gate blocker (clip_player) blocks vehicles too | raise the blocker before `gopath` |
