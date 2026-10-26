@@ -73,3 +73,13 @@ Files to create and change
 Phases with evidence gates (compile gates, screenshot tour list, audits)
 Verification criteria
 ```
+
+## Extra questions (stock-quality round)
+- **Nation and theme set:** American/Normandy (newvillers, corevillers), British desert
+  (libyatown, eldaba, matmata, toujane), German/Rhine, or Soviet (hand-built)? This decides the
+  prefab kit and the textures (`prefab-catalog.md`).
+- **Stock reference:** should the map look or play like a stock level (newvillers, eldaba,
+  matmata, toujane, decoytrenches...)? If so, which parts: layout, specific buildings or areas, or
+  only the mood? May stock geometry be copied (region prefabs), or should it only be a reference?
+  (`reverse-engineering.md`)
+

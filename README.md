@@ -20,6 +20,8 @@ Every rule in it was **measured in a real CoD2 1.3 + Mod Tools install**, not ta
 | **Scripting** | Level skeleton, objectives, autosaves, a custom squad brain, waves, hidden spawning, watchdogs, cinematic scenes |
 | **Vehicles** | Convoys, riders, halftrack MGs, tanks (turret control, sticky bombs), Crusaders, Stukas, truck finales with stock animations |
 | **Assets** | The sound-alias `loadspec` trap, vehicle engine sounds, `.str` / `_platform.str` hint keys, models, FX |
+| **Stock quality** | Measured anatomy of IW's own `newvillers` source, a 370-prefab catalogue by nation (US/Normandy, British/North Africa, Germany), and the stock script systems |
+| **Reverse engineering** | A CoD2 `.d3dbsp` decompiler: blueprint any stock map, or cut a bunker or street into a prefab for your own map |
 | **QA** | Screenshot tours, a mandatory auto-player mission flow test, a playtest loop with the user |
 
 ## Workflow it enforces
@@ -52,8 +54,15 @@ Each step ends with a **measurement**. "It compiled" is never accepted as proof.
 | `references/visual-qa.md` | Screenshot tours and the visual checklist |
 | `references/testing.md` | Load tests, the mission flow test (auto-player), log mining |
 | `references/pitfalls.md` | 100+ entries: symptom → cause → fix |
+| `references/stock-map-anatomy.md` | How Infinity Ward built `newvillers`, measured from the shipped source: geo/script split, prefab towns, terrain patches, road decals, dressing density, clips, portals, node density, trigger textures, lights |
+| `references/prefab-catalog.md` | All 370 stock prefabs measured (size, floor, front side, doors/windows), themes by nation, placement rules verified in game |
+| `references/stock-scripts-study.md` | How the 30 stock levels are scripted: `_load` trigger keys, call frequencies, level skeleton, start points, backdrops, ambience |
+| `references/reverse-engineering.md` | The CoD2 `.d3dbsp` format and how to decompile a stock map into a blueprint or cut regions into placeable prefabs |
 | `scripts/iwi_preview.py` | Export a material's texture to PNG |
-| `scripts/screenshot_tour.ps1` | Drive an in-game screenshot tour |
+| `scripts/screenshot_tour.ps1` | Drive an in-game screenshot tour (game window kept topmost) |
+| `scripts/map_inspect.py` | Parse any `.map`: entity, key and material statistics; real brush corners; patch sizes |
+| `scripts/prefab_catalog.py` | Regenerate the prefab catalogue (markdown + JSON) |
+| `scripts/bsp_decompile.py` | Decompile a stock `.d3dbsp` (whole map or `--region ... --prefab`) |
 
 ## Install
 

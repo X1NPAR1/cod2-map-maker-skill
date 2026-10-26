@@ -63,3 +63,11 @@ Avoid placeholder-looking textures (`*_shutters01`, `stalingrad_interiorwall01`)
   `node_cover_crouch_window`, `node_turret`. Radius ~42.
 - Vehicles: `script_vehicle` with `vehicletype`, `model`, `target` → `info_vehicle_node` chain
   (`speed`, `lookahead`, `script_noteworthy`), `script_vehiclespawngroup`. Paths must be LINEAR.
+
+## misc_prefab and the geo split (measured, cod2map 1.1)
+- `{ "classname" "misc_prefab" "model" "prefabs/<path>.map" "origin" "x y z" "angles" "0 yaw 0" }`
+  inserts another `.map` at compile time. Paths are relative to `map_source/`; nesting works.
+- IW's main file includes its visual file with `"model" "<map>_geo.map"` at origin 0
+  (`stock-map-anatomy.md` §1). Generate both and keep them in `map_source/`.
+- Prefab placement, floor and facing rules plus a `prefab()` helper: `prefab-catalog.md` §2–4.
+

@@ -34,6 +34,13 @@ Detailed references (read the one you need, do not guess):
 | `references/assets-sound-strings.md` | Sound alias loadspec trap, .str / _platform.str, models, FX |
 | `references/pitfalls.md` | Every bug we hit, its symptom, cause and fix |
 | `references/testing.md` | Load checks, automated test modes, console.log mining |
+| `references/stock-map-anatomy.md` | **How IW built newvillers** (measured): geo/script split, prefab towns, terrain patches, road decals, dressing density, clips, portals, node density, trigger textures, lights. The quality bar |
+| `references/prefab-catalog.md` | **370 stock prefabs** measured: size, floor, front side, doors/windows; theme-by-nation table; placement and facing rules (verified in game) |
+| `references/stock-scripts-study.md` | How the 30 stock levels are scripted: `_load` trigger keys, call frequencies, level skeleton, start points, backdrops, ambience |
+| `references/reverse-engineering.md` | CoD2 `.d3dbsp` format and `bsp_decompile.py`: blueprint of any stock map, or cut a region into a placeable prefab |
+| `scripts/map_inspect.py` | Parse any `.map`: entity/key/material statistics, real brush corners, patch sizes |
+| `scripts/prefab_catalog.py` | Regenerate the prefab catalogue (md + json) |
+| `scripts/bsp_decompile.py` | Decompile a stock `.d3dbsp` (whole map or `--region ... --prefab`) |
 
 ---
 
@@ -73,6 +80,18 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
    out of sight (`terrain-borders-hidden-roads.md`) before any geometry.
 3. **Generate geometry** with a Python generator (`gen_<map>.py`) plus `ent_<map>.py`.
    Never hand-edit a generated `.map`. Look at every texture you use (`scripts/iwi_preview.py`).
+   **Build like IW** (`stock-map-anatomy.md`):
+   - **Split the map:** write `<map>_geo.map` (terrain, buildings, props, lights) and include it in
+     `<map>.map` (nodes, triggers, spawners) with one `misc_prefab`.
+   - **Buildings and walls are stock prefabs** of the map's nation/theme (`prefab-catalog.md`:
+     American → newvillers/corevillers, British desert → libyatown/eldaba/matmata/toujane), placed
+     with `misc_prefab`, the floor on the ground and the front to the street.
+   - **Terrain:** many ~85 u patches; road edge-decal strips; 30–60 grass/weed clumps per 1000²;
+     varied model scales.
+   - **AI nodes** 50–100 u apart, half of them cover nodes.
+   - **Clips:** `clip_nosight` over foliage, `mantle_over` on low walls.
+   - **Stock look:** if the user wants a map "like <stock map>", ASK which map and which parts, then
+     use `reverse-engineering.md` (blueprint + `--region --prefab`).
 4. **Compile BSP + light.** Gate: `LEAK` 0, no `MAX_`, fresh `.d3dbsp`.
 5. **Connect paths.** Gate: paths saved, 0 `in solid`, 0 `no connections`, reachability BFS 0.
 6. **Script.** Gate: load test shows 0 script errors, 0 `unknown sound alias`.
@@ -95,6 +114,14 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
    relevant screenshot views, then hand back again.
 
 ## 3. Hard rules (each one cost a debugging session)
+
+### Stock quality bar
+- Measure your map with `scripts/map_inspect.py` and compare it with the newvillers numbers in
+  `stock-map-anatomy.md` §9 before the screenshot tour.
+- Prefer the stock trigger-key systems (`stock-scripts-study.md` §1) and `setgoalnode` (363 uses
+  vs 41 for `setgoalpos` in the stock levels) over custom loops.
+- Never recompile a whole decompiled stock map: cod2map crashes in `tris_mergeconcave`. Cut regions
+  into prefabs instead, and compile reconstructions with the crash watcher.
 
 ### Geometry
 - `.map` header is `iwmap 4`. Each brush is ≥4 planes `( x y z ) ( x y z ) ( x y z ) material
