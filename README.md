@@ -4,7 +4,7 @@ A Claude Code skill that turns Claude into a working **Call of Duty 2 single-pla
 
 Every rule in it was **measured in a real CoD2 1.3 + Mod Tools install**, not taken from documentation or memory.
 
-> **Built with this skill:** [cod2-maps](https://github.com/X1NPAR1/cod2-maps), a released five-mission campaign of about 45 minutes to 1 hour (3 Soviet + 2 British missions) with a one-click installer.
+> **Built with this skill:** [cod2-maps](https://github.com/X1NPAR1/cod2-maps), a released six-mission campaign of about 1 hour to 1 hour 15 minutes (3 Soviet + 3 British missions) with a one-click installer.
 >
 > Companion agent: [cod2-map-maker-agent](https://github.com/X1NPAR1/cod2-map-maker-agent)
 
