@@ -149,7 +149,14 @@ black loadscreen, wrong light, `MAP_KEY` raw text or a fatal `unknown sound alia
 - `clip_player` and `clip` brushes present at connectpaths time **cut path links** for AI.
   Build player-only blockers +2000u high and `moveZ(-2000, 0.05)` them into place at runtime.
 - AI make **no uphill link** across 16–17u steps. Every stair needs an invisible solid
-  (caulk) ramp under it; `clip` does not count as floor for AI.
+  ramp through the step noses made of **`clip_ai`** (AI-only solid, never drawn, does not cull
+  faces). A caulk ramp there deletes the step faces it covers and the stairs render as a void
+  (measured, sidirezegh); `clip` does not count as floor for AI. Leave floor in front of the
+  first step so AI enter from the front.
+- Vehicle paths must never loop back to an earlier node: stock `_vehicle` walks the chain at
+  load and dies with `exceeded maximum number of script variables`. Unroll laps instead.
+- Check every vehicle path against buildings, props and parked vehicles in the generator
+  (sample every 20u, fail on any hit) before compiling; keep wrecks where they die.
 - Node z must sit on the real floor triangle (±2u). Nodes floating 8u above a slope freeze AI.
 - Isolated islands are silent. Decode lump 38 and BFS from the player start (script in
   `ai-paths.md`). Target: 0 unreachable nodes.

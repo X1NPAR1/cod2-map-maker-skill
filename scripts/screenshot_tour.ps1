@@ -1,4 +1,4 @@
-﻿# screenshot_tour.ps1 -- generic CoD2 screenshot tour driver (see references/visual-qa.md)
+# screenshot_tour.ps1 -- generic CoD2 screenshot tour driver (see references/visual-qa.md)
 # Usage: .\screenshot_tour.ps1 -Oyun "<game root>" -Harita <map> -Mod <kr_tur value> -Nokta <views> -Onek <prefix>
 # The level GSC must implement: if (getcvar("kr_tur") == Mod) -> for each view set kr_adim n and hold the camera.
 # Images are written to <game root>\ekran\<prefix>_<n>.png. The Windows session must be unlocked.
@@ -14,9 +14,6 @@ Add-Type @"
 using System; using System.Runtime.InteropServices;
 public class KrFare {
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
-  [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr h, IntPtr after, int x, int y, int w, int hh, uint f);
-  // keep the game window topmost while capturing, so the user's own windows are never captured
-  public static void Topmost(IntPtr h) { SetWindowPos(h, new IntPtr(-1), 0, 0, 0, 0, 0x0001 | 0x0002 | 0x0010); }
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out RECT r);
   [DllImport("user32.dll")] public static extern bool GetClientRect(IntPtr h, out RECT r);
   [DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr h, ref POINT p);
@@ -104,7 +101,6 @@ while ($t -lt 600 -and $adim -le $Nokta) {
         if ($son -gt $adim) { "nokta $adim KACIRILDI"; $adim = $son }
         Start-Sleep -Milliseconds 1500
         $p.Refresh()
-        [KrFare]::Topmost($p.MainWindowHandle)
         Yakala $p.MainWindowHandle ("$r\ekran\{0}_{1}.png" -f $Onek, $adim)
         "nokta $adim alindi"
         $adim++

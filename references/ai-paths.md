@@ -35,7 +35,7 @@ print(n, 'nodes', n - len(seen), 'unreachable')
 
 ## Rules
 - **Node height:** put node z on the floor triangle surface, computed from the mesh rather than a constant.
-- **Steps:** the engine makes no uphill link across a step of 16 units or more. Put an invisible solid caulk ramp under every stair and porch. The visible steps can sit on top as detail.
+- **Steps:** the engine makes no uphill link across a step of 16 units or more. Put an invisible ramp through the step noses made of `clip_ai` (AI-only solid). Do NOT use caulk: caulk is structural and deletes every step face inside it, so the stairs render as a void. Leave ~80u of floor in front of the first step for a front entry node.
 - **Clip brushes:** `clip` and `clip_player` do not count as walkable floor for AI, and they block links at connectpaths time.
 - **Player-only walls:** compile them 2000 units higher, then lower them at runtime with `moveZ`.
 - **Doors:** keep them open or raised during connectpaths and close them at runtime.
